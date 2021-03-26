@@ -13,7 +13,7 @@ events {
 
 http {
     include                     /etc/nginx/mime.types;
-    default_type                text/plain;
+    default_type                application/octet-stream;
 
     {{ if getenv "NGINX_LOG_FORMAT_OVERRIDE" }}
     log_format                  custom '{{ getenv "NGINX_LOG_FORMAT_OVERRIDE" }}';
@@ -80,7 +80,7 @@ http {
 
     gzip                        {{ getenv "NGINX_GZIP" "on" }};
     gzip_buffers                {{ getenv "NGINX_GZIP_BUFFERS" "16 8k" }};
-    gzip_comp_level             {{ getenv "NGINX_GZIP_COMP_LEVEL" "5" }};
+    gzip_comp_level             {{ getenv "NGINX_GZIP_COMP_LEVEL" "1" }};
     gzip_http_version           {{ getenv "NGINX_GZIP_HTTP_VERSION" "1.1" }};
     gzip_min_length             {{ getenv "NGINX_GZIP_MIN_LENGTH" "20" }};
     gzip_vary                   {{ getenv "NGINX_GZIP_VARY" "on" }};
@@ -101,8 +101,6 @@ http {
                                 application/xml
                                 font/otf
                                 image/bmp
-                                image/jpeg
-                                image/png
                                 image/svg+xml
                                 text/cache-manifest
                                 text/calendar
