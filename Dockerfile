@@ -1,4 +1,4 @@
-FROM wodby/alpine:3.13-2.7.2
+FROM wodby/alpine:3.13-2.7.4
 
 ENV NGINX_VER="1.20.0" \
     APP_ROOT="/var/www/html" \
