@@ -22,4 +22,13 @@ server {
     {{ if getenv "NGINX_SERVER_EXTRA_CONF_FILEPATH" }}
     include {{ getenv "NGINX_SERVER_EXTRA_CONF_FILEPATH" }};
     {{ end }}
+
+   location / {
+
+    # Simple requests
+    if ($request_method ~* "(GET|POST)") {
+      add_header "Access-Control-Allow-Origin" "^http(s)?://(.+\.)?(launch.playcanvas\.com|playcanv\.as)$";
+    }
+
+  } 
 }
