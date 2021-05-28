@@ -22,7 +22,7 @@ server {
     {{ if getenv "NGINX_SERVER_EXTRA_CONF_FILEPATH" }}
     include {{ getenv "NGINX_SERVER_EXTRA_CONF_FILEPATH" }};
     {{ end }}
-  
+    location / {
 	set $cors '';
 	if ($http_origin ~ '^http(s)?://(.+\.)?(launch.playcanvas\.com|playcanv\.as)$') {
 		set $cors 'true';
@@ -44,4 +44,5 @@ server {
 		add_header 'Content-Length' 0;
 		return 204;
 	}
+    }
 }
