@@ -19,7 +19,9 @@ location / {
     index {{ $index }};
 
     try_files $uri $uri/ /{{ $index }} =404;
+}
 
+location ~* /sites/.+/files/videos/.+(\.mp4$|\.webm$|\.mov$|\.ogg$) {
     if ($http_origin ~* (^http(s)?://(.+\.)?(launch.playcanvas\.com|playcanv\.as)$)) {
         set $cors 'true';
     }
