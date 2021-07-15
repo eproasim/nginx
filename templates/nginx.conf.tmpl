@@ -13,6 +13,11 @@ events {
 
 http {
     include                     /etc/nginx/mime.types;
+    types {
+                                application/wasm     wasm;
+                                model/gltf-binary     glb;
+
+    }
     default_type                text/plain;
 
     {{ if getenv "NGINX_LOG_FORMAT_OVERRIDE" }}
@@ -64,6 +69,7 @@ http {
                                 image/vnd.microsoft.icon
                                 image/x-icon
                                 image/x-win-bitmap
+                                model/gltf-binary
                                 text/cache-manifest
                                 text/css
                                 text/javascript
@@ -102,6 +108,7 @@ http {
                                 font/otf
                                 image/bmp
                                 image/svg+xml
+                                model/gltf-binary
                                 text/cache-manifest
                                 text/calendar
                                 text/css
