@@ -1,6 +1,6 @@
 -include env_make
 
-NGINX_VER ?= 1.20.0
+NGINX_VER ?= 1.20.1
 NGINX_MINOR_VER ?= $(shell echo "${NGINX_VER}" | grep -oE '^[0-9]+\.[0-9]+')
 
 TAG ?= $(NGINX_MINOR_VER)
@@ -15,7 +15,8 @@ else
     BASE_IMAGE_TAG := $(ALPINE_VER)-$(BASE_IMAGE_STABILITY_TAG)
 endif
 
-REPO = wodby/nginx
+REGISTRY ?= docker.io
+REPO = $(REGISTRY)/wodby/nginx
 NAME = nginx-$(NGINX_MINOR_VER)
 
 ifneq ($(STABILITY_TAG),)
