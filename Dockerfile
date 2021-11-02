@@ -1,6 +1,10 @@
-FROM wodby/alpine:3.13-2.7.4
+ARG BASE_IMAGE_TAG
 
-ENV NGINX_VER="1.20.0" \
+FROM wodby/alpine:${BASE_IMAGE_TAG}
+
+ARG NGINX_VER
+
+ENV NGINX_VER="${NGINX_VER}" \
     APP_ROOT="/var/www/html" \
     FILES_DIR="/mnt/files" \
     NGINX_VHOST_PRESET="html"
