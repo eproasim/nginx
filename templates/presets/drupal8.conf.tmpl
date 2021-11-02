@@ -38,7 +38,7 @@ location / {
     }
 
     location ~* /sites/.+/files/videos/.+(\.mp4$|\.webm$|\.mov$|\.ogg$) {
-        if ($http_origin ~* (^http(s)?://(.+\.)?(launch.playcanvas\.com|playcanv\.as)$)) {
+        if ($http_origin ~* (^http(s)?://(.+\.)?(launch.playcanvas\.com|playcanv\.as|files.create-cms\.com)$)) {
             set $cors 'true';
         }
 
