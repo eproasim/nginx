@@ -1,4 +1,4 @@
-{{ $static := (getenv "NGINX_STATIC_EXT_REGEX" "css|cur|js|jpe?g|gif|htc|ico|png|xml|otf|ttf|eot|woff|woff2|svg|mp4|svgz|ogg|ogv|pdf|pptx?|zip|tgz|gz|rar|bz2|doc|xls|exe|tar|mid|midi|wav|bmp|rtf|txt|map") }}
+{{ $static := (getenv "NGINX_STATIC_EXT_REGEX" "css|cur|js|jpe?g|gif|htc|ico|png|xml|otf|ttf|eot|woff|woff2|svg|mp4|svgz|ogg|ogv|pdf|pptx?|zip|tgz|gz|rar|bz2|doc|xls|exe|tar|mid|midi|wav|bmp|rtf|txt|map|webp") }}
 {{ $index := (getenv "NGINX_INDEX_FILE" "index.html") }}
 
 location / {
@@ -14,29 +14,6 @@ location / {
         open_file_cache_valid {{ getenv "NGINX_STATIC_OPEN_FILE_CACHE_VALID" "30s" }};
         open_file_cache_min_uses {{ getenv "NGINX_STATIC_OPEN_FILE_CACHE_MIN_USES" "2" }};
         open_file_cache_errors {{ getenv "NGINX_STATIC_OPEN_FILE_CACHE_ERRORS" "off" }};
-    }
-
-    location ~* /sites/.+/files/videos/.+(\.mp4$|\.webm$|\.mov$|\.ogg$) {
-        if ($http_origin ~* (^http(s)?://(.+\.)?(launch.playcanvas\.com|playcanv\.as)$)) {
-            set $cors 'true';
-        }
-
-        if ($cors = 'true') {
-            add_header 'Access-Control-Allow-Origin' "$http_origin" always;
-            add_header 'Access-Control-Allow-Credentials' 'true' always;
-            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS' always;
-            add_header 'Access-Control-Allow-Headers' 'Accept,Authorization,Cache-Control,Content-Type,DNT,If-Modified-Since,Keep-Alive,Origin,User-Agent,X-Requested-With' always;
-            # required to be able to read Authorization header in frontend
-            #add_header 'Access-Control-Expose-Headers' 'Authorization' always;
-        }
-
-        if ($request_method = 'OPTIONS') {
-            # Tell client that this pre-flight info is valid for 20 days
-            add_header 'Access-Control-Max-Age' 1728000;
-            add_header 'Content-Type' 'text/plain charset=UTF-8';
-            add_header 'Content-Length' 0;
-            return 204;
-        }
     }
 
     index {{ $index }};

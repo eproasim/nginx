@@ -4,6 +4,9 @@ FROM wodby/alpine:${BASE_IMAGE_TAG}
 
 ARG NGINX_VER
 
+ARG WODBY_USER_ID=1000
+ARG WODBY_GROUP_ID=1000
+
 ENV NGINX_VER="${NGINX_VER}" \
     APP_ROOT="/var/www/html" \
     FILES_DIR="/mnt/files" \
@@ -15,12 +18,14 @@ RUN set -ex; \
     ngx_modsecurity_ver="1.0.0"; \
     modsecurity_ver="3.0.4"; \
     owasp_crs_ver="3.1.0"; \
+    brotli_commit='9aec15e2aa6feea2113119ba06460af70ab3ea62'; \
+    vts_commit='3c6cf41315bfcb48c35a3a0be81ddba6d0d01dac'; \
     \
     addgroup -S nginx; \
     adduser -S -D -H -h /var/cache/nginx -s /sbin/nologin -G nginx nginx; \
     \
-	addgroup -g 1000 -S wodby; \
-	adduser -u 1000 -D -S -s /bin/bash -G wodby wodby; \
+	addgroup -g "${WODBY_GROUP_ID}" -S wodby; \
+	adduser -u "${WODBY_USER_ID}" -D -S -s /bin/bash -G wodby wodby; \
 	sed -i '/^wodby/s/!/*/' /etc/shadow; \
 	echo "PS1='\w\$ '" >> /home/wodby/.bashrc; \
     \
@@ -86,6 +91,8 @@ RUN set -ex; \
     # Brotli.
     cd /tmp; \
     git clone --depth 1 --single-branch https://github.com/google/ngx_brotli; \
+    cd /tmp/ngx_brotli; \
+    git checkout ${brotli_commit}; \
     \
     # Get ngx modsecurity module.
     mkdir -p /tmp/ngx_http_modsecurity_module; \
@@ -105,6 +112,11 @@ RUN set -ex; \
     mkdir -p /tmp/ngx_http_uploadprogress_module; \
     url="https://github.com/masterzen/nginx-upload-progress-module/archive/v${nginx_up_ver}.tar.gz"; \
     wget -qO- "${url}" | tar xz --strip-components=1 -C /tmp/ngx_http_uploadprogress_module; \
+    \
+    # Get VTS module \
+    git clone https://github.com/vozlt/nginx-module-vts.git /tmp/nginx_module_vts; \
+    cd /tmp/nginx_module_vts; \
+    git checkout ${vts_commit}; \
     \
     # Download nginx.
     curl -fSL "https://nginx.org/download/nginx-${NGINX_VER}.tar.gz" -o /tmp/nginx.tar.gz; \
@@ -158,6 +170,7 @@ RUN set -ex; \
         --with-threads \
         --add-module=/tmp/ngx_http_uploadprogress_module \
         --add-module=/tmp/ngx_brotli \
+        --add-module=/tmp/nginx_module_vts \
         --add-dynamic-module=/tmp/ngx_http_modsecurity_module; \
     \
     make -j$(getconf _NPROCESSORS_ONLN); \

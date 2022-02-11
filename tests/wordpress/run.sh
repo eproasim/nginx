@@ -7,9 +7,14 @@ if [[ -n "${DEBUG}" ]]; then
 fi
 
 check_endpoint() {
-    docker-compose exec -T nginx curl -s -I "localhost/${1}" | grep -q "${2}"
+    docker-compose exec -T nginx curl -s -S -I "localhost/${1}" | grep -q "${2}"
     echo "OK"
 }
+
+clean_exit() {
+  docker-compose down
+}
+trap clean_exit EXIT
 
 docker-compose up -d
 
@@ -45,5 +50,3 @@ check_endpoint "favicon.ico" "200 OK"
 
 echo -n "Checking non-existing php endpoint... "
 check_endpoint "non-existing.php" "404 Not Found"
-
-docker-compose down
