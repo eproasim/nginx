@@ -36,7 +36,14 @@ _backwards_compatibility() {
 process_templates() {
     _backwards_compatibility
 
-    _gotpl "nginx.conf.tmpl" "/etc/nginx/nginx.conf"
+    # Override default CSP header for Drupal and WP.
+    if [[ "${NGINX_VHOST_PRESET}" =~ ^drupal9|drupal8|drupal7|drupal6|wordpress$ ]]; then
+      if [[ -z "${NGINX_HEADERS_CONTENT_SECURITY_POLICY}" ]]; then
+        export NGINX_HEADERS_CONTENT_SECURITY_POLICY="frame-ancestors 'self'"
+      fi
+    fi
+
+    _gotpl "config/nginx.conf.tmpl" "/etc/nginx/nginx.conf"
     _gotpl "vhost.conf.tmpl" "/etc/nginx/conf.d/vhost.conf"
     _gotpl "includes/defaults.conf.tmpl" "/etc/nginx/defaults.conf"
     _gotpl "includes/fastcgi.conf.tmpl" "/etc/nginx/fastcgi.conf"

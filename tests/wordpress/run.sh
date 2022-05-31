@@ -50,3 +50,6 @@ check_endpoint "favicon.ico" "200 OK"
 
 echo -n "Checking non-existing php endpoint... "
 check_endpoint "non-existing.php" "404 Not Found"
+
+echo -n "Check CSP header...   "
+check_endpoint "" "frame-ancestors 'self'"
