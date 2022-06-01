@@ -18,7 +18,7 @@ RUN set -ex; \
     ngx_modsecurity_ver="1.0.0"; \
     modsecurity_ver="3.0.4"; \
     owasp_crs_ver="3.1.0"; \
-    brotli_commit='002707757594b641bae01c3ab7f6413c57be8528'; \
+    brotli_commit='9aec15e2aa6feea2113119ba06460af70ab3ea62'; \
     vts_commit='3c6cf41315bfcb48c35a3a0be81ddba6d0d01dac'; \
     \
     addgroup -S nginx; \
@@ -90,7 +90,7 @@ RUN set -ex; \
     \
     # Brotli.
     cd /tmp; \
-    git clone --depth 1 --single-branch https://github.com/google/ngx_brotli; \
+    git clone --depth 10 --single-branch https://github.com/google/ngx_brotli; \
     cd /tmp/ngx_brotli; \
     git checkout ${brotli_commit}; \
     \
