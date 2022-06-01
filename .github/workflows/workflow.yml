@@ -9,12 +9,9 @@ on:
     - '*'
 
 env:
-  BASE_IMAGE_STABILITY_TAG: 2.8.3
-  ALPINE_VER: 3.13
+  BASE_IMAGE_STABILITY_TAG: 2.10.6
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  WODBY1_REGISTRY_USERNAME: ${{ secrets.WODBY1_REGISTRY_USERNAME }}
-  WODBY1_REGISTRY_PASSWORD: ${{ secrets.WODBY1_REGISTRY_PASSWORD }}
 
 jobs:
   nginx-121:
@@ -27,7 +24,7 @@ jobs:
     - uses: docker/setup-buildx-action@v1
     - uses: ./.github/actions
       with:
-        version: 1.21.3
+        version: '1.21.6'
         tags: 1.21,1,latest
         platform: linux/amd64,linux/arm64
   nginx-120:
@@ -40,7 +37,7 @@ jobs:
     - uses: docker/setup-buildx-action@v1
     - uses: ./.github/actions
       with:
-        version: 1.20.1
+        version: '1.20.2'
         tags: '1.20'
         platform: linux/amd64,linux/arm64
   nginx-119:
@@ -53,6 +50,6 @@ jobs:
     - uses: docker/setup-buildx-action@v1
     - uses: ./.github/actions
       with:
-        version: 1.19.10
+        version: '1.19.10'
         tags: 1.19
         platform: linux/amd64,linux/arm64
