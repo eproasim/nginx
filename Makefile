@@ -1,11 +1,11 @@
 -include env_make
 
-NGINX_VER ?= 1.21.6
+NGINX_VER ?= 1.23.3
 NGINX_MINOR_VER ?= $(shell echo "${NGINX_VER}" | grep -oE '^[0-9]+\.[0-9]+')
 
 TAG ?= $(NGINX_MINOR_VER)
 
-ALPINE_VER ?= 3.15
+ALPINE_VER ?= 3.16
 
 PLATFORM ?= linux/amd64
 
@@ -76,10 +76,9 @@ test:
 	cd ./tests/php && IMAGE=$(REPO):$(TAG) ./run.sh
 	cd ./tests/matomo && IMAGE=$(REPO):$(TAG) ./run.sh
 	cd ./tests/wordpress && IMAGE=$(REPO):$(TAG) ./run.sh
+	cd ./tests/drupal/10 && IMAGE=$(REPO):$(TAG) ./run.sh
 	cd ./tests/drupal/9 && IMAGE=$(REPO):$(TAG) ./run.sh
-	cd ./tests/drupal/8 && IMAGE=$(REPO):$(TAG) ./run.sh
 	cd ./tests/drupal/7 && IMAGE=$(REPO):$(TAG) ./run.sh
-	cd ./tests/drupal/6 && IMAGE=$(REPO):$(TAG) ./run.sh
 
 push:
 	docker push $(REPO):$(TAG)

@@ -12,6 +12,8 @@ ENV NGINX_VER="${NGINX_VER}" \
     FILES_DIR="/mnt/files" \
     NGINX_VHOST_PRESET="html"
 
+COPY patches /tmp/patches
+
 RUN set -ex; \
     \
     nginx_up_ver="0.9.1"; \
@@ -108,11 +110,21 @@ RUN set -ex; \
     mv crs-setup.conf.example /etc/nginx/modsecurity/crs/setup.conf; \
     mv rules /etc/nginx/modsecurity/crs; \
     \
-    # Get ngx uploadprogress module.
+    # Get ngx upload progress module. \
     mkdir -p /tmp/ngx_http_uploadprogress_module; \
     url="https://github.com/masterzen/nginx-upload-progress-module/archive/v${nginx_up_ver}.tar.gz"; \
     wget -qO- "${url}" | tar xz --strip-components=1 -C /tmp/ngx_http_uploadprogress_module; \
+    if [[ "${NGINX_VER}" == 1.23* ]]; then \
+        cd /tmp/ngx_http_uploadprogress_module; \
+        patch -p1 -i /tmp/patches/1.23/uploadprogress.patch; \
+    fi; \
     \
+    # Keys were changed since 1.22.
+    if [[ "${NGINX_VER}" == 1.19* || "${NGINX_VER}" == 1.20* || "${NGINX_VER}" == 1.21* ]]; then \
+        export GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8; \
+    else \
+        export GPG_KEYS=13C82A63B603576156E30A4EA0EA981B66B0D967; \
+    fi; \
     # Get VTS module \
     git clone https://github.com/vozlt/nginx-module-vts.git /tmp/nginx_module_vts; \
     cd /tmp/nginx_module_vts; \
@@ -121,7 +133,7 @@ RUN set -ex; \
     # Download nginx.
     curl -fSL "https://nginx.org/download/nginx-${NGINX_VER}.tar.gz" -o /tmp/nginx.tar.gz; \
     curl -fSL "https://nginx.org/download/nginx-${NGINX_VER}.tar.gz.asc"  -o /tmp/nginx.tar.gz.asc; \
-    GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 gpg_verify /tmp/nginx.tar.gz.asc /tmp/nginx.tar.gz; \
+    gpg_verify /tmp/nginx.tar.gz.asc /tmp/nginx.tar.gz; \
     tar zxf /tmp/nginx.tar.gz -C /tmp; \
     \
     cd "/tmp/nginx-${NGINX_VER}"; \
